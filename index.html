@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>SINH HỌC 11 | ÔN TẬP GIỮA KÌ II</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #0b4d3c;
+            --secondary: #1a7f5c;
+            --accent: #ffd700;
+            --light: #f0f9f4;
+            --dark: #0a1f1a;
+            --gradient: linear-gradient(145deg, #0b4d3c, #1a7f5c);
+            --shadow: 0 10px 30px rgba(0,0,0,0.2);
+            --shadow-hover: 0 20px 40px rgba(26,127,92,0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--dark);
+            min-height: 100vh;
+            padding: 12px;
+            position: relative;
+        }
+
+        /* HIỆU ỨNG NỀN NHẸ NHÀNG */
+        .bg-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(26,127,92,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(255,215,0,0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* POPUP DONATE */
+        .donate-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .donate-modal.show {
+            display: flex;
+        }
+
+        .donate-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 32px;
+            padding: 24px 20px;
+            position: relative;
+            animation: slideUp 0.3s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-donate {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .donate-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .donate-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .donate-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .bank-grid {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ccc;
+            font-size: 14px;
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+        }
+
+        .bank-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .bank-value {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(145deg, #0b4d3c, #1a7f5c);
+            border-radius: 28px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            padding: 8px 16px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-number {
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        /* PROGRESS */
+        .progress-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .progress-percent {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-count {
+            background: var(--light);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        /* QUESTION CARD */
+        .question-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+
+        .question-card:active {
+            transform: scale(0.99);
+        }
+
+        .question-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .question-number {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(26,127,92,0.2);
+        }
+
+        .question-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .option:active {
+            background: #e8f3ee;
+            border-color: var(--secondary);
+            transform: translateX(4px);
+        }
+
+        .option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--secondary);
+        }
+
+        /* STATEMENT */
+        .statement-item {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .statement-text {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .statement-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stmt-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .stmt-option:active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .stmt-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--secondary);
+        }
+
+        /* SUBMIT BUTTON */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(26,127,92,0.3);
+            transition: all 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 5px 10px rgba(26,127,92,0.3);
+        }
+
+        /* RESULT MODAL */
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 900;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .result-modal.show {
+            display: flex;
+        }
+
+        .result-card {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 32px;
+            padding: 24px 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .result-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-score {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--secondary);
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .score-box {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .score-box-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .score-box-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .wrong-list {
+            background: #fff5f5;
+            border-radius: 20px;
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid #ffcdd2;
+        }
+
+        .wrong-title {
+            color: #c62828;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wrong-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #c62828;
+            font-size: 13px;
+        }
+
+        .wrong-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .wrong-answer {
+            color: #c62828;
+            margin-bottom: 4px;
+        }
+
+        .correct-answer {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .close-result {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* DONATE BUTTON */
+        .donate-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ff4757, #ff6b81);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255,71,87,0.3);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .donate-float:active {
+            transform: scale(0.9);
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effect"></div>
+
+    <!-- POPUP DONATE -->
+    <div class="donate-modal" id="donateModal">
+        <div class="donate-card">
+            <span class="close-donate" onclick="closeDonate()">&times;</span>
+            <div class="donate-icon">🌿</div>
+            <div class="donate-title">Ủng hộ mình nhé!</div>
+            <div class="donate-desc">
+                Mình đã biên soạn 15 câu trắc nghiệm và 8 câu đúng/sai.<br>
+                Nếu thấy hữu ích, bạn có thể mời mình ly cà phê ☕
+            </div>
+            <div class="bank-grid">
+                <div class="bank-row">
+                    <span class="bank-label">🏦 MB Bank</span>
+                    <span class="bank-value">0985 658 044</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">👤 Chủ TK</span>
+                    <span class="bank-value">TRẦN ĐÌNH CƯỜNG</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">📱 Zalo Pay</span>
+                    <span class="bank-value">0985 658 044</span>
+                </div>
+            </div>
+            <div style="text-align: center; color: var(--secondary); font-weight: 600;">
+                Cảm ơn bạn! 🍀
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Sinh học 11</h1>
+            <p>Ôn tập giữa kì II • 2025-2026</p>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number">15</span> Trắc nghiệm
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8</span> Đúng/Sai
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-card">
+            <div class="progress-header">
+                <span class="progress-title">Tiến độ ôn tập</span>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-stats">
+                <span>Đã làm: <span id="progressDone">0</span></span>
+                <span>Tổng: <span id="progressTotal">47</span></span>
+            </div>
+        </div>
+
+        <!-- TRẮC NGHIỆM -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">📝 Trắc nghiệm</div>
+                <div class="section-count">15 câu</div>
+            </div>
+            <div id="tnContainer"></div>
+        </div>
+
+        <!-- ĐÚNG/SAI -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">✅ Đúng/Sai</div>
+                <div class="section-count">8 câu (32 ý)</div>
+            </div>
+            <div id="dsContainer"></div>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button class="submit-btn" onclick="submitExam()">📊 NỘP BÀI</button>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            Dev: TRẦN ĐÌNH CƯỜNG
+        </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-card">
+            <div class="result-header">
+                <div class="result-icon">📊</div>
+                <div class="result-title">Kết quả</div>
+            </div>
+            <div class="result-score" id="resultScore">0/47</div>
+            
+            <div class="score-grid">
+                <div class="score-box">
+                    <div class="score-box-label">Trắc nghiệm</div>
+                    <div class="score-box-value" id="tnScore">0/15</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-box-label">Đúng/Sai</div>
+                    <div class="score-box-value" id="dsScore">0/32</div>
+                </div>
+            </div>
+
+            <div id="wrongList" class="wrong-list"></div>
+
+            <button class="close-result" onclick="closeResult()">ĐÓNG</button>
+        </div>
+    </div>
+
+    <!-- DONATE BUTTON -->
+    <button class="donate-float" onclick="showDonate()">❤️</button>
+
+    <script>
+        // DỮ LIỆU TRẮC NGHIỆM
+        const tnData = [
+            { id: 1, question: "Hướng sáng thuộc loại", options: ["A. Ứng động", "B. Hướng động", "C. Cảm ứng sinh trưởng", "D. Vận động tự phát"], correct: 1 },
+            { id: 2, question: "Rễ cây mọc xuống đất là hiện tượng", options: ["A. Hướng sáng", "B. Hướng nước", "C. Hướng trọng lực dương", "D. Hướng tiếp xúc"], correct: 2 },
+            { id: 3, question: "Lá cây trinh nữ cụp lại khi chạm vào là", options: ["A. Hướng động", "B. Ứng động", "C. Hướng sáng", "D. Hướng nước"], correct: 1 },
+            { id: 4, question: "Hoocmon tham gia chủ yếu trong hướng sáng là", options: ["A. GA", "B. Auxin", "C. ABA", "D. Cytokinin"], correct: 1 },
+            { id: 5, question: "Hướng tiếp xúc thường thấy ở", options: ["A. Rễ lúa", "B. Thân ngô", "C. Tua cuốn cây bầu", "D. Lá mía"], correct: 2 },
+            { id: 6, question: "Trong hướng sáng, auxin tập trung nhiều ở phía", options: ["A. Được chiếu sáng", "B. Không được chiếu sáng", "C. Đỉnh sinh trưởng", "D. Gốc thân"], correct: 1 },
+            { id: 7, question: "Phân biệt hướng động và ứng động dựa vào", options: ["A. Tốc độ phản ứng", "B. Có hoocmon hay không", "C. Sự định hướng của kích thích", "D. Mức độ sinh trưởng"], correct: 2 },
+            { id: 8, question: "Rễ cây hướng về nơi có nước là", options: ["A. Hướng trọng lực", "B. Hướng nước dương", "C. Ứng động", "D. Hướng sáng âm"], correct: 1 },
+            { id: 9, question: "Ứng động sinh trưởng khác ứng động không sinh trưởng ở điểm", options: ["A. Có auxin", "B. Có biến đổi sức trương nước", "C. Có sự tăng trưởng tế bào", "D. Có ánh sáng"], correct: 2 },
+            { id: 10, question: "Nếu loại bỏ đỉnh sinh trưởng, cây sẽ", options: ["A. Hướng sáng bình thường", "B. Không còn hướng sáng", "C. Tăng hướng sáng", "D. Không ảnh hưởng"], correct: 1 },
+            { id: 11, question: "Khi chiếu sáng đều từ mọi phía, thân cây sẽ", options: ["A. Cong về một phía", "B. Thẳng đứng", "C. Gãy", "D. Rũ xuống"], correct: 1 },
+            { id: 12, question: "Nếu đặt chậu cây nằm ngang, sau một thời gian rễ sẽ", options: ["A. Mọc ngang", "B. Mọc lên trên", "C. Mọc xuống dưới", "D. Không thay đổi"], correct: 2 },
+            { id: 13, question: "Trong nhà kính, để cây mọc thẳng cần", options: ["A. Chiếu sáng một phía", "B. Không chiếu sáng", "C. Chiếu sáng đồng đều", "D. Tăng nhiệt độ"], correct: 2 },
+            { id: 14, question: "Một cây đột biến không tổng hợp được auxin sẽ có biểu hiện", options: ["A. Hướng sáng mạnh", "B. Không hướng sáng", "C. Hướng sáng mạnh hơn bình thường", "D. Tăng trưởng nhanh"], correct: 1 },
+            { id: 15, question: "Khi rễ cây bị xoay ngược (đầu rễ quay lên), hiện tượng xảy ra là", options: ["A. Rễ tiếp tục mọc lên", "B. Rễ cong xuống dưới", "C. Rễ ngừng sinh trưởng", "D. Rễ chết"], correct: 1 }
+        ];
+
+        // DỮ LIỆU ĐÚNG/SAI
+        const dsData = [
+            { 
+                id: 1, 
+                title: "Hướng động",
+                statements: [
+                    "a) Hướng động là phản ứng sinh trưởng của thực vật trước tác nhân kích thích có định hướng.",
+                    "b) Hướng sáng luôn là phản ứng dương ở mọi bộ phận của cây.",
+                    "c) Rễ cây thường có hướng trọng lực dương.",
+                    "d) Hướng hóa chỉ xảy ra ở rễ cây."
+                ],
+                correct: [true, false, true, false]
+            },
+            { 
+                id: 2, 
+                title: "Ứng động",
+                statements: [
+                    "a) Ứng động là phản ứng sinh trưởng không phụ thuộc hướng tác nhân kích thích.",
+                    "b) Ứng động sinh trưởng liên quan đến sự phân chia và lớn lên của tế bào.",
+                    "c) Cụp lá ở cây trinh nữ là ứng động không sinh trưởng.",
+                    "d) Ứng động xảy ra nhanh hơn hướng động."
+                ],
+                correct: [true, true, true, true]
+            },
+            { 
+                id: 3, 
+                title: "Vai trò và cơ chế cảm ứng",
+                statements: [
+                    "a) Cảm ứng giúp thực vật thích nghi với biến đổi môi trường.",
+                    "b) Thực vật không có hệ thần kinh nên không có phản ứng với môi trường.",
+                    "c) Auxin phân bố không đều gây ra hiện tượng hướng sáng.",
+                    "d) Mọi phản ứng cảm ứng ở thực vật đều diễn ra rất chậm."
+                ],
+                correct: [true, false, true, false]
+            },
+            { 
+                id: 4, 
+                title: "Khái niệm và đặc điểm cảm ứng ở động vật",
+                statements: [
+                    "a) Cảm ứng ở động vật là khả năng tiếp nhận và phản ứng lại các kích thích của môi trường.",
+                    "b) Mọi phản ứng cảm ứng ở động vật đều do hệ nội tiết điều khiển.",
+                    "c) Động vật có hệ thần kinh càng phát triển thì phản ứng càng nhanh và chính xác.",
+                    "d) Động vật đơn bào không có khả năng cảm ứng."
+                ],
+                correct: [true, false, true, false]
+            },
+            { 
+                id: 5, 
+                title: "Phản xạ và cung phản xạ",
+                statements: [
+                    "a) Phản xạ là phản ứng của cơ thể trả lời kích thích thông qua hệ thần kinh.",
+                    "b) Cung phản xạ gồm: thụ quan – nơron hướng tâm – trung ương thần kinh – nơron li tâm – cơ quan phản ứng.",
+                    "c) Phản xạ không điều kiện là phản xạ được hình thành trong đời sống cá thể.",
+                    "d) Tủy sống có thể tham gia điều khiển một số phản xạ đơn giản."
+                ],
+                correct: [true, true, false, true]
+            },
+            { 
+                id: 6, 
+                title: "Hệ thần kinh ở các nhóm động vật",
+                statements: [
+                    "a) Hệ thần kinh dạng lưới có ở ruột khoang.",
+                    "b) Hệ thần kinh dạng chuỗi hạch có ở giun đốt và chân khớp.",
+                    "c) Động vật có xương sống có hệ thần kinh dạng ống.",
+                    "d) Hệ thần kinh càng phân hóa thì khả năng thích nghi càng kém."
+                ],
+                correct: [true, true, true, false]
+            },
+            { 
+                id: 7, 
+                title: "So sánh cảm ứng ở thực vật và động vật",
+                statements: [
+                    "a) Cảm ứng ở động vật thường diễn ra nhanh hơn ở thực vật.",
+                    "b) Động vật phản ứng chủ yếu nhờ hệ thần kinh và cơ quan thụ cảm chuyên hóa.",
+                    "c) Mọi phản ứng cảm ứng ở động vật đều là phản xạ.",
+                    "d) Cảm ứng giúp động vật tồn tại và thích nghi với môi trường."
+                ],
+                correct: [true, true, false, true]
+            },
+            { 
+                id: 8, 
+                title: "Sinh trưởng và phát triển ở thực vật",
+                statements: [
+                    "a) Sinh trưởng ở thực vật là sự tăng kích thước và khối lượng cơ thể do tăng số lượng và kích thước tế bào.",
+                    "b) Phát triển ở thực vật chỉ bao gồm quá trình sinh trưởng.",
+                    "c) Mô phân sinh đỉnh giúp cây tăng chiều dài.",
+                    "d) Sinh trưởng thứ cấp làm cây tăng đường kính thân."
+                ],
+                correct: [true, false, true, true]
+            }
+        ];
+
+        // BIẾN LƯU ĐÁP ÁN
+        let tnAnswers = new Array(tnData.length).fill(null);
+        let dsAnswers = {};
+
+        // RENDER TRẮC NGHIỆM
+        function renderTN() {
+            let html = '';
+            tnData.forEach((q, idx) => {
+                html += `
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">${q.id}</div>
+                            <div class="question-text">${q.question}</div>
+                        </div>
+                        <div class="options">
+                            ${q.options.map((opt, optIdx) => `
+                                <label class="option">
+                                    <input type="radio" name="tn_${q.id}" value="${optIdx}" onchange="saveTN(${idx}, ${optIdx})">
+                                    <span>${opt}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('tnContainer').innerHTML = html;
+        }
+
+        // RENDER ĐÚNG/SAI
+        function renderDS() {
+            let html = '';
+            dsData.forEach(q => {
+                html += `
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">Đ/S ${q.id}</div>
+                            <div class="question-text">${q.title}</div>
+                        </div>
+                        ${q.statements.map((stmt, idx) => `
+                            <div class="statement-item">
+                                <div class="statement-text">${stmt}</div>
+                                <div class="statement-options">
+                                    <label class="stmt-option">
+                                        <input type="radio" name="ds_${q.id}_${idx}" value="true" onchange="saveDS(${q.id}, ${idx}, true)"> Đ
+                                    </label>
+                                    <label class="stmt-option">
+                                        <input type="radio" name="ds_${q.id}_${idx}" value="false" onchange="saveDS(${q.id}, ${idx}, false)"> S
+                                    </label>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            });
+            document.getElementById('dsContainer').innerHTML = html;
+        }
+
+        // LƯU ĐÁP ÁN
+        window.saveTN = (idx, val) => { tnAnswers[idx] = val; updateProgress(); }
+        window.saveDS = (id, idx, val) => { 
+            if (!dsAnswers[id]) dsAnswers[id] = {};
+            dsAnswers[id][idx] = val;
+            updateProgress();
+        }
+
+        // CẬP NHẬT PROGRESS
+        function updateProgress() {
+            let tnCount = tnAnswers.filter(a => a !== null).length;
+            let dsCount = 0;
+            Object.values(dsAnswers).forEach(item => dsCount += Object.keys(item).length);
+            const total = tnData.length + dsData.reduce((sum, q) => sum + q.statements.length, 0);
+            const done = tnCount + dsCount;
+            const percent = Math.round((done / total) * 100);
+            
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressPercent').innerText = percent + '%';
+            document.getElementById('progressDone').innerText = done;
+        }
+
+        // NỘP BÀI
+        window.submitExam = () => {
+            let tnCorrect = 0, tnWrong = [];
+            tnAnswers.forEach((ans, idx) => {
+                if (ans !== null) {
+                    if (ans === tnData[idx].correct) tnCorrect++;
+                    else tnWrong.push({
+                        id: tnData[idx].id,
+                        q: tnData[idx].question,
+                        user: tnData[idx].options[ans],
+                        correct: tnData[idx].options[tnData[idx].correct]
+                    });
+                }
+            });
+
+            let dsCorrect = 0, dsWrong = [];
+            dsData.forEach(q => {
+                if (dsAnswers[q.id]) {
+                    for (let i = 0; i < q.statements.length; i++) {
+                        if (dsAnswers[q.id][i] !== undefined) {
+                            if (dsAnswers[q.id][i] === q.correct[i]) dsCorrect++;
+                            else dsWrong.push({
+                                id: `${q.id}.${String.fromCharCode(97 + i)}`,
+                                stmt: q.statements[i],
+                                correct: q.correct[i] ? 'ĐÚNG' : 'SAI'
+                            });
+                        }
+                    }
+                }
+            });
+
+            const totalTN = tnData.length;
+            const totalDS = dsData.reduce((sum, q) => sum + q.statements.length, 0);
+            const total = totalTN + totalDS;
+            const totalCorrect = tnCorrect + dsCorrect;
+
+            document.getElementById('tnScore').innerText = `${tnCorrect}/${totalTN}`;
+            document.getElementById('dsScore').innerText = `${dsCorrect}/${totalDS}`;
+            document.getElementById('resultScore').innerText = `${totalCorrect}/${total}`;
+
+            let wrongHtml = '<div class="wrong-title">📌 CHI TIẾT CÂU SAI</div>';
+            if (tnWrong.length === 0 && dsWrong.length === 0) {
+                wrongHtml += '<p style="color:#2e7d32; text-align:center;">🎉 Xuất sắc! Không có câu sai!</p>';
+            } else {
+                tnWrong.forEach(w => wrongHtml += `
+                    <div class="wrong-item">
+                        <div class="wrong-question">Câu ${w.id}: ${w.q}</div>
+                        <div class="wrong-answer">❌ Bạn chọn: ${w.user}</div>
+                        <div class="correct-answer">✅ Đáp án: ${w.correct}</div>
+                    </div>
+                `);
+                dsWrong.forEach(w => wrongHtml += `
+                    <div class="wrong-item">
+                        <div class="wrong-question">Câu Đ/S ${w.id}</div>
+                        <div class="wrong-question">${w.stmt}</div>
+                        <div class="correct-answer">✅ Đáp án: ${w.correct}</div>
+                    </div>
+                `);
+            }
+            document.getElementById('wrongList').innerHTML = wrongHtml;
+            document.getElementById('resultModal').classList.add('show');
+        }
+
+        window.closeResult = () => document.getElementById('resultModal').classList.remove('show');
+        window.showDonate = () => document.getElementById('donateModal').classList.add('show');
+        window.closeDonate = () => document.getElementById('donateModal').classList.remove('show');
+
+        // KHỞI TẠO
+        renderTN();
+        renderDS();
+        setTimeout(() => showDonate(), 2000);
+    </script>
+</body>
+</html>
