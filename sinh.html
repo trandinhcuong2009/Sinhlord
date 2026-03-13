@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>AZOTA - ÔN TẬP SINH HỌC 11</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            position: relative;
+        }
+
+        /* HIỆU ỨNG NỀN */
+        .bg-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMzAgMTBhMjAgMjAgMCAwIDEgMjAgMjAgMjAgMjAgMCAwIDEtNDAgMCAyMCAyMCAwIDAgMSAyMC0yMHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=');
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.1) inset;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            animation: slideUp 1s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* POPUP DONATE SIÊU CẤP */
+        .donate-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donate-popup.show {
+            display: flex;
+            animation: popupFade 0.4s;
+        }
+
+        @keyframes popupFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .donate-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            width: 90%;
+            max-width: 400px;
+            border-radius: 50px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            position: relative;
+            animation: cardFloat 0.6s;
+            border: 3px solid #ffd700;
+        }
+
+        @keyframes cardFloat {
+            from { transform: scale(0.8) translateY(50px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: #999;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-popup:hover {
+            background: #ffd700;
+            color: #333;
+            transform: rotate(90deg);
+        }
+
+        .heart-icon {
+            font-size: 70px;
+            margin-bottom: 15px;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+        }
+
+        .donate-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .donate-message {
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .bank-box {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border-radius: 30px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.3);
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+        }
+
+        .bank-label {
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .bank-value {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .momo-box {
+            background: #d82d8b;
+            border-radius: 30px;
+            padding: 15px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 30px rgba(216, 45, 139, 0.4);
+        }
+
+        .thanks-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #28a745;
+            animation: fadeUp 2s infinite;
+        }
+
+        @keyframes fadeUp {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 40px);
+            animation: moveBg 20s linear infinite;
+        }
+
+        @keyframes moveBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffd700;
+            margin-right: 8px;
+        }
+
+        .stat-label {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* PROGRESS */
+        .progress-section {
+            padding: 20px 20px 0;
+        }
+
+        .progress-card {
+            background: #f8f9fa;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .progress-percent {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 30px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: right;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            padding: 20px;
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin: 25px 0 15px;
+            padding-left: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        /* QUESTION CARDS */
+        .question-card {
+            background: white;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .question-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .card-header {
+            padding: 18px;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .question-number {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* OPTIONS */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 18px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: linear-gradient(145deg, #f1f3f5, #e9ecef);
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        .option span {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        /* STATEMENT ITEMS (ĐÚNG/SAI) */
+        .statement-item {
+            background: #f8f9fa;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .statement-text {
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .statement-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .statement-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .statement-option:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .statement-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+
+        /* SUBMIT BUTTON */
+        .submit-section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        /* RESULT MODAL */
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1500;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .result-card {
+            background: white;
+            width: 90%;
+            max-width: 450px;
+            border-radius: 40px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideUp 0.4s;
+        }
+
+        .result-icon {
+            font-size: 70px;
+            margin-bottom: 15px;
+            animation: bounce 1s;
+        }
+
+        @keyframes bounce {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .result-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 900;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .score-detail {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .score-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .wrong-answers {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .wrong-item {
+            padding: 8px;
+            color: #dc3545;
+            border-bottom: 1px dashed #ddd;
+            font-size: 14px;
+        }
+
+        .close-result {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-result:hover {
+            transform: scale(1.05);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-quote {
+            color: #667eea;
+            font-style: italic;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* DONATE BUTTON */
+        .donate-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            border: none;
+            color: #333;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+            z-index: 1000;
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donate-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(255,215,0,0.7);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255,215,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effect"></div>
+
+    <!-- POPUP DONATE -->
+    <div class="donate-popup show" id="donatePopup">
+        <div class="donate-card">
+            <span class="close-popup" onclick="closeDonatePopup()">&times;</span>
+            <div class="heart-icon">❤️</div>
+            <h2 class="donate-title">ỦNG HỘ NHÉ!</h2>
+            <div class="donate-message">
+                Mình đã bỏ rất nhiều công sức để làm web này.<br>
+                Nếu thấy hữu ích, bạn có thể mời mình ly cà phê ☕
+            </div>
+            
+            <div class="bank-box">
+                <div class="bank-row">
+                    <span class="bank-label">🏦 Ngân hàng:</span>
+                    <span class="bank-value">MBBANK</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">📝 Số TK:</span>
+                    <span class="bank-value">0985-658-044</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">👤 Chủ TK:</span>
+                    <span class="bank-value">TRAN DINH CUONG</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">💎 Nội dung:</span>
+                    <span class="bank-value">UNG HO</span>
+                                </div>
+            </div>
+
+            <div class="momo-box">
+                <div class="bank-row">
+                    <span class="bank-label">📱 zalopay:</span>
+                    <span class="bank-value">0985 658 044</span>
+                </div>
+            </div>
+
+            <div class="thanks-text">
+                Cảm ơn bạn! Chúc bạn thi tốt! 🍀
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>AZOTA</h1>
+            <p>ÔN TẬP SINH HỌC 11</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">TN</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">Đ/S</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-section">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span>TIẾN ĐỘ</span>
+                    <span class="progress-percent" id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0/23 câu</div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- TRẮC NGHIỆM -->
+            <div class="section-title">📝 PHẦN I: TRẮC NGHIỆM (15 câu)</div>
+            <div id="tracnghiemContainer"></div>
+
+            <!-- ĐÚNG/SAI -->
+            <div class="section-title">✅ PHẦN II: ĐÚNG/SAI (8 câu)</div>
+            <div id="dungsaiContainer"></div>
+
+            <!-- SUBMIT BUTTON -->
+            <div class="submit-section">
+                <button class="submit-btn" onclick="submitAll()">📊 NỘP BÀI</button>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-quote">"Học, học nữa, học mãi"</div>
+            <div class="footer-text">© 2026 - AZOTA Ôn tập</div>
+        </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-card">
+            <div class="result-icon">📊</div>
+            <h2 class="result-title">KẾT QUẢ</h2>
+            <div class="result-score" id="resultScore">0/23</div>
+            
+            <div class="score-detail">
+                <div class="score-item">
+                    <div class="score-label">Trắc nghiệm</div>
+                    <div class="score-number" id="tnScore">0/15</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Đúng/Sai</div>
+                    <div class="score-number" id="dsScore">0/8</div>
+                </div>
+            </div>
+
+            <div class="wrong-answers" id="wrongAnswers">
+                <!-- Chi tiết câu sai sẽ hiện ở đây -->
+            </div>
+
+            <button class="close-result" onclick="closeResult()">LÀM LẠI</button>
+        </div>
+    </div>
+
+    <!-- DONATE BUTTON -->
+    <button class="donate-btn" onclick="showDonatePopup()">❤️</button>
+
+    <script>
+        // DỮ LIỆU TRẮC NGHIỆM
+        const tracnghiemData = [
+            { id: 1, question: "Hướng sáng thuộc loại", options: ["A. Ứng động", "B. Hướng động", "C. Cảm ứng sinh trưởng", "D. Vận động tự phát"], correct: 1 },
+            { id: 2, question: "Rễ cây mọc xuống đất là hiện tượng", options: ["A. Hướng sáng", "B. Hướng nước", "C. Hướng trọng lực dương", "D. Hướng tiếp xúc"], correct: 2 },
+            { id: 3, question: "Lá cây trinh nữ cụp lại khi chạm vào là", options: ["A. Hướng động", "B. Ứng động", "C. Hướng sáng", "D. Hướng nước"], correct: 1 },
+            { id: 4, question: "Hoocmon tham gia chủ yếu trong hướng sáng là", options: ["A. GA", "B. Auxin", "C. ABA", "D. Cytokinin"], correct: 1 },
+            { id: 5, question: "Hướng tiếp xúc thường thấy ở", options: ["A. Rễ lúa", "B. Thân ngô", "C. Tua cuốn cây bầu", "D. Lá mía"], correct: 2 }
+        ];
+
+        // DỮ LIỆU ĐÚNG/SAI
+        const dungsaiData = [
+            { id: 1, question: "Cho các nhận định sau về hướng động:", statements: [
+                "a) Hướng động là phản ứng sinh trưởng của thực vật trước tác nhân kích thích có định hướng.",
+                "b) Hướng sáng luôn là phản ứng dương ở mọi bộ phận của cây.",
+                "c) Rễ cây thường có hướng trọng lực dương.",
+                "d) Hướng hóa chỉ xảy ra ở rễ cây."
+            ], correct: [true, false, true, false] }
+        ];
+
+        // BIẾN ĐẾM
+        let tnAnswers = new Array(tracnghiemData.length).fill(null);
+        let dsAnswers = {};
+
+        // RENDER TRẮC NGHIỆM
+        function renderTracNghiem() {
+            const container = document.getElementById('tracnghiemContainer');
+            let html = '';
+            tracnghiemData.forEach((q, index) => {
+                html += `
+                    <div class="question-card">
+                        <div class="card-header">
+                            <div class="question-number">${q.id}</div>
+                            <div class="question-text">${q.question}</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="options">
+                                ${q.options.map((opt, optIdx) => `
+                                    <label class="option">
+                                        <input type="radio" name="tn_${q.id}" value="${optIdx}" onchange="saveTN(${index}, ${optIdx})">
+                                        <span>${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // RENDER ĐÚNG/SAI
+        function renderDungSai() {
+            const container = document.getElementById('dungsaiContainer');
+            let html = '';
+            dungsaiData.forEach(q => {
+                html += `
+                    <div class="question-card">
+                        <div class="card-header">
+                            <div class="question-number">Đ/S ${q.id}</div>
+                            <div class="question-text">${q.question}</div>
+                        </div>
+                        <div class="card-body">
+                            ${q.statements.map((stmt, idx) => `
+                                <div class="statement-item">
+                                    <div class="statement-text">${stmt}</div>
+                                    <div class="statement-options">
+                                        <label class="statement-option">
+                                            <input type="radio" name="ds_${q.id}_${idx}" value="true" onchange="saveDS(${q.id}, ${idx}, true)"> ĐÚNG
+                                        </label>
+                                        <label class="statement-option">
+                                            <input type="radio" name="ds_${q.id}_${idx}" value="false" onchange="saveDS(${q.id}, ${idx}, false)"> SAI
+                                        </label>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // LƯU ĐÁP ÁN TRẮC NGHIỆM
+        window.saveTN = function(index, value) {
+            tnAnswers[index] = value;
+            updateProgress();
+        }
+
+        // LƯU ĐÁP ÁN ĐÚNG/SAI
+        window.saveDS = function(id, stt, value) {
+            if (!dsAnswers[id]) dsAnswers[id] = {};
+            dsAnswers[id][stt] = value;
+            updateProgress();
+        }
+
+        // CẬP NHẬT PROGRESS
+        function updateProgress() {
+            let tnCount = tnAnswers.filter(a => a !== null).length;
+            let dsCount = 0;
+            
+            Object.values(dsAnswers).forEach(item => {
+                dsCount += Object.keys(item).length;
+            });
+
+            const total = tracnghiemData.length + (dungsaiData.length * 4);
+            const done = tnCount + dsCount;
+            const percent = Math.round((done / total) * 100);
+            
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressText').textContent = done + '/' + total + ' câu';
+        }
+
+        // NỘP BÀI
+        window.submitAll = function() {
+            // TÍNH ĐIỂM TRẮC NGHIỆM
+            let tnCorrect = 0;
+            tnAnswers.forEach((ans, idx) => {
+                if (ans === tracnghiemData[idx].correct) tnCorrect++;
+            });
+
+            // TÍNH ĐIỂM ĐÚNG/SAI
+            let dsCorrect = 0;
+            let wrongList = [];
+
+            dungsaiData.forEach(q => {
+                if (dsAnswers[q.id]) {
+                    for (let i = 0; i < 4; i++) {
+                        if (dsAnswers[q.id][i] === q.correct[i]) {
+                            dsCorrect++;
+                        } else {
+                            wrongList.push(`Câu ${q.id}.${String.fromCharCode(97 + i)}`);
+                        }
+                    }
+                }
+            });
+
+            // HIỂN THỊ KẾT QUẢ
+            document.getElementById('tnScore').textContent = `${tnCorrect}/15`;
+            document.getElementById('dsScore').textContent = `${dsCorrect}/8`;
+            document.getElementById('resultScore').textContent = `${tnCorrect + dsCorrect}/23`;
+
+            let wrongHtml = '<strong>Câu sai:</strong><br>';
+            if (wrongList.length === 0) {
+                wrongHtml += '🎉 Xuất sắc! Không có câu sai!';
+            } else {
+                wrongHtml += wrongList.join('<br>');
+            }
+            document.getElementById('wrongAnswers').innerHTML = wrongHtml;
+
+            document.getElementById('resultModal').classList.add('show');
+        }
+
+        // ĐÓNG KẾT QUẢ
+        window.closeResult = function() {
+            document.getElementById('resultModal').classList.remove('show');
+        }
+
+        // POPUP DONATE
+        window.showDonatePopup = function() {
+            document.getElementById('donatePopup').classList.add('show');
+        }
+
+        window.closeDonatePopup = function() {
+            document.getElementById('donatePopup').classList.remove('show');
+        }
+
+        // KHỞI TẠO
+        renderTracNghiem();
+        renderDungSai();
+    </script>
+</body>
+</html>
