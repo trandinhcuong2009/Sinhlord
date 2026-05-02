@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Ôn thi Sinh học 11 - Trắc nghiệm Azota Style</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 750px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      padding: 24px 20px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #0b3b2f;
+      text-align: center;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #d4f7e8, #b2e4d5);
+      padding: 16px;
+      border-radius: 20px;
+      margin-bottom: 5px;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 18px;
+      gap: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .part-select {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1e293b;
+      outline: none;
+      cursor: pointer;
+      flex: 1;
+      min-width: 150px;
+    }
+    .timer-box {
+      background: #0f172a;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 10px 18px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .progress-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      flex-wrap: wrap;
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: 16px;
+      border: 1px solid #d1dbe5;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0d9488, #22c55e);
+      border-radius: 20px;
+      transition: width 0.25s ease;
+    }
+    .question-card {
+      background: #ffffff;
+      border: 1px solid #e9eef3;
+      border-radius: 22px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+    }
+    .q-num {
+      font-weight: 700;
+      color: #0f766e;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .q-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #0b1e33;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-item {
+      background: #f9fafc;
+      border: 1.5px solid #dce3eb;
+      border-radius: 16px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-item:hover {
+      background: #e6f7f0;
+      border-color: #0d9488;
+    }
+    .option-item.selected {
+      background: #d1fae5;
+      border-color: #059669;
+      font-weight: 500;
+    }
+    .option-item.correct {
+      background: #bbf7d0;
+      border-color: #16a34a;
+      color: #14532d;
+    }
+    .option-item.wrong {
+      background: #fecaca;
+      border-color: #dc2626;
+      color: #7f1d1d;
+    }
+    input[type="radio"], input[type="checkbox"] {
+      accent-color: #0d9488;
+      width: 1.2rem;
+      height: 1.2rem;
+      pointer-events: none;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      padding: 11px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-primary {
+      background: #0f766e;
+      border-color: #0f766e;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0e5e56;
+    }
+    .btn-outline {
+      background: white;
+      border-color: #0f766e;
+      color: #0f766e;
+    }
+    .btn-outline:hover {
+      background: #e6f7f5;
+    }
+    .explain-box {
+      margin-top: 18px;
+      background: #f1f5f9;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      border-left: 4px solid #0d9488;
+    }
+    .score-summary {
+      background: #f0fdf4;
+      padding: 18px;
+      border-radius: 20px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #065f46;
+    }
+    footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 500px) {
+      .container { padding: 18px 12px; }
+      .option-item { padding: 10px 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="app">
+  <h1>🌿 Sinh 11 - Trắc nghiệm cuối kì 2</h1>
+
+  <div class="toolbar">
+    <select class="part-select" id="partSelect">
+      <option value="all">📚 Tất cả các phần</option>
+      <option value="camung">Cảm ứng (Thực vật & Động vật)</option>
+      <option value="sinhtruongtv">Sinh trưởng & Phát triển ở TV</option>
+      <option value="sinhtruongdv">Sinh trưởng & Phát triển ở ĐV</option>
+      <option value="sinhsan">Sinh sản (TV & ĐV)</option>
+    </select>
+    <div class="timer-box" id="timerDisplay">⏳ 00:00</div>
+  </div>
+
+  <div class="progress-area">
+    <span id="qIndex">Câu 1/...</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span id="scoreBadge" style="font-weight:600;">0đ</span>
+  </div>
+
+  <div class="question-card" id="questionCard">
+    <div class="q-num" id="qNum"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="action-buttons">
+      <button class="btn btn-outline" id="prevBtn">◀ Trước</button>
+      <button class="btn btn-primary" id="checkBtn">✅ Kiểm tra</button>
+      <button class="btn btn-outline" id="nextBtn">Tiếp ▶</button>
+    </div>
+    <div id="explainArea"></div>
+  </div>
+
+  <div class="score-summary" id="finalScore" style="display:none;"></div>
+  <footer>Ôn thi theo đề cương - Sinh 11 | Giao diện trắc nghiệm Azota</footer>
+</div>
+
+<script>
+  (function() {
+    // ---------- DỮ LIỆU CÂU HỎI (trích từ đề cương) ----------
+    const questions = [
+      // ========== CẢM ỨNG Ở THỰC VẬT (1-15) ==========
+      { id:1, part:'camung', type:'mc', text:'Vận động sinh trưởng có định hướng ở thực vật gọi là', opts:['Ứng động','Hướng động','Phản xạ','Tập tính'], ans:1 },
+      { id:2, part:'camung', type:'mc', text:'Cây cong về phía ánh sáng do', opts:['Auxin tập trung phía sáng','Auxin phân bố đều','Auxin tập trung phía tối','Giảm nước phía sáng'], ans:2 },
+      { id:3, part:'camung', type:'mc', text:'Động vật nào dưới đây có hệ thần kinh dạng lưới?', opts:['Bọ rùa','Đỉa','Giun đũa','San hô'], ans:3 },
+      { id:4, part:'camung', type:'mc', text:'Động vật nào dưới đây có hai chuỗi hạch chạy dọc thân?', opts:['Ong','Bọ ngựa','Sán lá gan','Đỉa'], ans:3 },
+      { id:5, part:'camung', type:'mc', text:'Một cung phản xạ gồm có bao nhiêu thành phần cơ bản?', opts:['7','6','4','5'], ans:3 },
+      { id:6, part:'camung', type:'mc', text:'Phản xạ nào dưới đây là phản xạ có điều kiện?', opts:['Sởn gai ốc khi có gió lạnh','Rụt tay lại khi chạm vật nóng','Vã mồ hôi khi ăn đồ chua','Bỏ chạy khi có báo cháy'], ans:3 },
+      { id:7, part:'camung', type:'mc', text:'Trong não bộ, thành phần nào đóng vai trò quan trọng nhất tạo nên sự khác biệt trí tuệ loài người?', opts:['Đại não','Tiểu não','Não trung gian','Hành – cầu não'], ans:0 },
+      { id:8, part:'camung', type:'mc', text:'Động vật nào có tổ chức thần kinh tiến hoá nhất?', opts:['Sán lông','Cá chép','Bọ ngựa','Thuỷ tức'], ans:1 },
+      { id:9, part:'camung', type:'mc', text:'Động vật nào có tỉ lệ khối lượng não/khối lượng cơ thể nhỏ nhất?', opts:['Sư tử','Chó','Tinh tinh','Voi'], ans:3 },
+      { id:10, part:'camung', type:'mc', text:'Não bộ của động vật có vú được phân chia thành mấy phần cơ bản?', opts:['7','6','3','5'], ans:3 },
+      { id:11, part:'camung', type:'mc', text:'Khi dùng kim châm vào một bộ phận, động vật nào co rút toàn thân?', opts:['Linh cẩu','Thú mỏ vịt','Ve sầu','Hải quỳ'], ans:3 },
+      { id:12, part:'camung', type:'mc', text:'Động vật nào có khả năng hình thành nhiều phản xạ có điều kiện nhất?', opts:['Chó cỏ','Cá heo','Rắn nước','Cá đuối'], ans:1 },
+      { id:13, part:'camung', type:'mc', text:'Cảm ứng ở thực vật biểu hiện bằng', opts:['Sự thay đổi hình thái','Sự vận động khi kích thích từ một hướng','Sự tiếp nhận kích thích','Sự vận động khi kích thích có hướng hoặc không hướng'], ans:3 },
+      { id:14, part:'camung', type:'mc', text:'Phát biểu nào SAI khi nói về đặc điểm cảm ứng ở thực vật?', opts:['Các yếu tố môi trường là tác nhân kích thích','Cảm ứng diễn ra chậm, khó nhận biết','Cảm ứng luôn gắn với sinh trưởng tế bào','Cảm ứng có thể liên quan hoặc không liên quan sinh trưởng'], ans:2 },
+      { id:15, part:'camung', type:'mc', text:'Hướng động là hình thức phản ứng của cây đối với', opts:['Tác nhân không định hướng','Tác nhân từ một hướng xác định','Sự đóng mở khí khổng','Các chất hóa học'], ans:1 },
+      // ... bổ sung tiếp các câu còn lại của phần cảm ứng
+      { id:16, part:'camung', type:'mc', text:'Thân và rễ có kiểu hướng động nào?', opts:['Thân hướng sáng dương, trọng lực âm; rễ hướng sáng dương, trọng lực dương','Thân hướng sáng dương, trọng lực âm; rễ hướng sáng âm, trọng lực dương','Thân hướng sáng âm, trọng lực dương; rễ hướng sáng dương, trọng lực âm','Thân hướng sáng dương, trọng lực dương; rễ hướng sáng âm, trọng lực dương'], ans:1 },
+      { id:17, part:'camung', type:'mc', text:'Ứng động là hình thức phản ứng của cây đối với', opts:['Tác nhân kích thích không định hướng','Tác nhân từ một hướng xác định','Tác nhân có hướng và vô hướng','Các chất hóa học'], ans:0 },
+      { id:18, part:'camung', type:'mc', text:'Khi trồng cây bên bờ ao, rễ cây phát triển theo hướng nào?', opts:['Mọc dài về phía bờ ao','Phát triển đều quanh gốc','Uốn cong về phía ngược bờ ao','Phát triển ăn sâu xuống đất'], ans:2 },
+      { id:19, part:'camung', type:'mc', text:'Trường hợp nào là ứng động không sinh trưởng?', opts:['Hoa bồ công anh nở khi có ánh sáng','Vận động ngủ, thức của chồi cây bàng','Thân, tua cuốn quấn trên giàn','Hiện tượng cụp lá ở cây trinh nữ'], ans:3 },
+      { id:20, part:'camung', type:'mc', text:'Khi sống trong tối được chiếu sáng từ một phía, ngọn cây hướng về phía ánh sáng do', opts:['Auxin phân bố không đều, tế bào phía tối dãn nhanh hơn','Auxin phân bố đều, tế bào phía tối dãn nhanh hơn','Auxin phân bố không đều, tế bào phía sáng dãn nhanh hơn','Auxin phân bố đều, tế bào phía sáng dãn nhanh hơn'], ans:0 },
+
+      // ========== SINH TRƯỞNG & PHÁT TRIỂN TV (hoocmon, mô phân sinh) ==========
+      { id:30, part:'sinhtruongtv', type:'mc', text:'Xitokinin có tác dụng kích thích nguyên phân ở mô phân sinh và', opts:['phát triển chồi bên, tăng hóa già','Phát triển chồi bên, làm chậm hóa già','làm chậm phát triển chồi bên và hóa già','làm chậm phát triển chồi bên, làm chậm hóa già'], ans:1 },
+      { id:31, part:'sinhtruongtv', type:'mc', text:'Về hai biện pháp: thắp đèn ban đêm ở vườn cúc mùa thu và bắn pháo hoa ban đêm ở đồng mía mùa đông, phát biểu đúng là', opts:['Cả hai đều kìm hãm ra hoa','Cả hai đều kích thích ra hoa','Thắp đèn kìm hãm ra hoa, bắn pháo kích thích ra hoa','Thắp đèn kích thích ra hoa, bắn pháo kìm hãm ra hoa'], ans:0 },
+      { id:32, part:'sinhtruongtv', type:'mc', text:'Đặc điểm không có ở sinh trưởng sơ cấp là', opts:['Làm tăng chiều dài cây','Diễn ra hoạt động của tầng sinh bần','Diễn ra ở cả cây Một lá mầm và Hai lá mầm','Diễn ra hoạt động của mô phân sinh đỉnh'], ans:1 },
+      { id:33, part:'sinhtruongtv', type:'mc', text:'Khi cây đã già thì lượng chất nào tăng?', opts:['AIA','Etilen','Cytokinin','GA'], ans:1 },
+      { id:34, part:'sinhtruongtv', type:'mc', text:'Người ta ngắt quãng thời gian che tối vào ban đêm, cây không ra hoa. Cây đó thuộc nhóm', opts:['Cây ngày ngắn','Cây ngày dài','Cây trung tính','Cây ngày ngắn hoặc trung tính'], ans:0 },
+      { id:35, part:'sinhtruongtv', type:'mc', text:'Vai trò chủ yếu của axit abxixic (AAB) là', opts:['Kìm hãm sinh trưởng cây, lóng, gây ngủ chồi, hạt, mở khí khổng','Kìm hãm cành, lóng, làm mất ngủ chồi, hạt, đóng khí khổng','Kìm hãm cành, lóng, gây trạng thái ngủ chồi, hạt, đóng khí khổng','Kìm hãm cành, lóng, mất ngủ chồi, hạt, mở khí khổng'], ans:2 },
+      { id:36, part:'sinhtruongtv', type:'mc', text:'Về sinh trưởng thứ cấp, phát biểu đúng là', opts:['Sự gia tăng chiều dài','Do hoạt động mô phân sinh bên','Có ở tất cả thực vật hạt kín','Chỉ có ở thực vật một lá mầm'], ans:1 },
+      { id:37, part:'sinhtruongtv', type:'mc', text:'Thí nghiệm cắt đỉnh cây hướng dương, bôi AIA lên vết cắt một cây. Phát biểu SAI là', opts:['Cây bôi AIA có nhiều chồi bên hơn','Một trong hai cây có số chồi bên nhiều hơn','AIA là chất kích thích sinh trưởng','Cắt đỉnh nhằm loại bỏ nguồn auxin'], ans:0 },
+      { id:38, part:'sinhtruongtv', type:'mc', text:'Xác định tuổi cây cà chua theo số lá. Khi đến lá thứ mấy thì cây ra hoa?', opts:['14','15','12','13'], ans:0 },
+      { id:39, part:'sinhtruongtv', type:'mc', text:'Giberelin có vai trò', opts:['Tăng số lần nguyên phân, tăng chiều dài tế bào và thân','Giảm số lần nguyên phân, tăng chiều dài tế bào và thân','Tăng số lần nguyên phân, giảm chiều dài tế bào, tăng thân','Tăng số lần nguyên phân và chiều dài tế bào, giảm chiều dài thân'], ans:0 },
+      { id:40, part:'sinhtruongtv', type:'mc', text:'Florigen kích thích ra hoa được sinh ra ở', opts:['Chồi nách','Lá','Đỉnh thân','Rễ'], ans:1 },
+      { id:41, part:'sinhtruongtv', type:'mc', text:'Ở cây Hai lá mầm, thứ tự mô phân sinh từ ngọn đến rễ', opts:['Mô phân sinh đỉnh ngọn → bên → đỉnh rễ','Mô phân sinh đỉnh ngọn → đỉnh rễ → bên','Mô phân sinh đỉnh rễ → bên → bên','Mô phân sinh bên → đỉnh ngọn → đỉnh rễ'], ans:0 },
+      { id:42, part:'sinhtruongtv', type:'mc', text:'Phát biểu SAI về vai trò điều tiết của hoocmon thực vật', opts:['Sự phân hóa giới tính hoa liên quan đến hàm lượng hoocmon','Ở cây non nhiều rễ phụ đa phần thành cây đực','Cây nhiều lá, cân bằng hoocmon, tỉ lệ hoa đực/cái bằng','Cây nhiều rễ, ít lá, cân bằng hoocmon thì tỉ lệ hoa đực bằng hoa cái'], ans:1 }, // đáp án B sai (theo đề cương)
+      { id:43, part:'sinhtruongtv', type:'mc', text:'Nhổ mạ lên rồi cấy nhằm mục đích', opts:['Giúp lúa đẻ nhánh tốt','Làm đứt đỉnh rễ giúp bộ rễ phát triển mạnh','Làm đất thoáng khí','Kìm hãm phát triển chống lốp đổ'], ans:1 },
+      { id:44, part:'sinhtruongtv', type:'mc', text:'Sử dụng auxin tự nhiên và nhân tạo nhằm', opts:['Kích thích ra rễ, hạn chế thụ quả, tạo quả không hạt, nuôi cấy mô, diệt cỏ','Kích thích ra rễ, tăng tỉ lệ thụ quả, tạo quả không hạt, nuôi cấy mô, diệt cỏ','Hạn chế ra rễ, tăng tỉ lệ thụ quả, tạo quả không hạt, nuôi cấy mô, diệt cỏ','Kích thích ra rễ, tăng tỉ lệ thụ quả, tạo quả không hạt, nuôi cấy mô, diệt cỏ'], ans:1 },
+      { id:45, part:'sinhtruongtv', type:'mc', text:'Phitocrom là sắc tố cảm nhận quang chu kì', opts:['và cảm nhận ánh sáng, bản chất protein, có trong hạt cần ánh sáng','và cảm nhận ánh sáng, bản chất phi protein, có trong hạt','và cảm nhận ánh sáng, bản chất protein, chứa trong lá','nhưng không cảm nhận ánh sáng, bản chất protein, có trong hạt'], ans:0 },
+      { id:46, part:'sinhtruongtv', type:'mc', text:'Sinh trưởng ở thực vật là quá trình', opts:['Tăng chiều dài','Tăng chiều ngang','Tăng khối lượng','Tăng khối lượng và kích thước'], ans:3 },
+      { id:47, part:'sinhtruongtv', type:'mc', text:'Lúa mì, sen cạn, dâu tây thuộc nhóm', opts:['Chỉ ra hoa khi độ sáng <12h/ngày','Chỉ ra hoa khi độ sáng >12h/ngày','Ra hoa không phụ thuộc ngoại cảnh','Ra hoa khi thời gian chiếu sáng = thời gian tối'], ans:1 },
+      { id:48, part:'sinhtruongtv', type:'mc', text:'Hoocmon thực vật có tính chuyên hóa', opts:['Cao hơn hoocmon động vật bậc cao','Thấp hơn hoocmon động vật bậc cao','Vừa phải','Không có tính chuyên hóa'], ans:1 },
+      { id:49, part:'sinhtruongtv', type:'mc', text:'Sắc tố tiếp nhận ánh sáng trong phản ứng quang chu kì là', opts:['Diệp lục b','Carotenoit','Phitocrom','Diệp lục a'], ans:2 },
+
+      // ========== SINH TRƯỞNG & PHÁT TRIỂN ĐỘNG VẬT ==========
+      { id:60, part:'sinhtruongdv', type:'mc', text:'Dựa vào giai đoạn phát triển hậu phôi, loài nào không cùng nhóm với những loài còn lại?', opts:['Ếch','Ruồi','Ong','Ve sầu'], ans:0 },
+      { id:61, part:'sinhtruongdv', type:'mc', text:'Bọ gậy là ấu trùng của loài sâu bọ nào?', opts:['Chuồn chuồn','Ruồi','Muỗi','Kiến dương'], ans:2 },
+      { id:62, part:'sinhtruongdv', type:'mc', text:'Trong vòng đời bướm, liền trước giai đoạn nhộng là', opts:['Bọ gậy','Bướm trưởng thành','Trứng','Sâu bướm'], ans:3 },
+      { id:63, part:'sinhtruongdv', type:'mc', text:'Động vật nào có ấu trùng sống dưới nước?', opts:['Muỗi','Chuồn chuồn','Ếch','Tất cả'], ans:3 },
+      { id:64, part:'sinhtruongdv', type:'mc', text:'Thức ăn chủ yếu của hầu hết các loài bướm là', opts:['Mật hoa','Rễ cây','Lá cây','Chồi non'], ans:0 },
+      { id:65, part:'sinhtruongdv', type:'mc', text:'Hoocmôn nào không có vai trò làm tăng tổng hợp protein?', opts:['Tất cả','Insulin','GH','Testostêrôn'], ans:0 },
+      { id:66, part:'sinhtruongdv', type:'mc', text:'Hoocmôn quan trọng trong biến thái từ nòng nọc thành ếch là', opts:['Tirôxin','GH','Canxitônin','Ơstrôgen'], ans:0 },
+      { id:67, part:'sinhtruongdv', type:'mc', text:'Ở côn trùng, juvenin và ecđixơn đều có tác dụng', opts:['Kích thích biến đổi nhộng thành bướm','Ức chế biến đổi sâu thành nhộng','Gây lột xác ở sâu bướm','Tất cả'], ans:2 },
+      { id:68, part:'sinhtruongdv', type:'mc', text:'Hiện tượng lột xác không có ở động vật nào?', opts:['Ve sầu','Rắn','Chẫu chàng','Châu chấu'], ans:2 },
+      { id:69, part:'sinhtruongdv', type:'mc', text:'Ở động vật bậc cao, cơ quan có nguồn gốc từ lá phôi ngoài là', opts:['Tuỷ sống','Gan','Tuỵ','Xương ức'], ans:0 },
+      { id:70, part:'sinhtruongdv', type:'mc', text:'Hoocmôn sinh trưởng do tuyến nội tiết nào tiết ra?', opts:['Tuyến tuỵ','Tuyến sinh dục','Tuyến giáp','Tuyến yên'], ans:3 },
+      { id:71, part:'sinhtruongdv', type:'mc', text:'Có bao nhiêu loại hoocmôn ảnh hưởng trực tiếp đến sinh trưởng và phát triển ở người?', opts:['3','4','5','6'], ans:1 },
+      { id:72, part:'sinhtruongdv', type:'mc', text:'Nhân tố bên ngoài ảnh hưởng mạnh nhất đến sinh trưởng và phát triển của động vật', opts:['Ánh sáng','Nhiệt độ','Nước','Thức ăn'], ans:3 },
+      { id:73, part:'sinhtruongdv', type:'mc', text:'Gà mẹ ấp trứng cho thấy vai trò của nhân tố', opts:['Nguồn dinh dưỡng','Nhiệt độ','Ánh sáng','Nước'], ans:1 },
+      { id:74, part:'sinhtruongdv', type:'mc', text:'Loại bức xạ quan trọng biến đổi tiền vitamin D thành vitamin D', opts:['Tia UV','Tia hồng ngoại','Ánh sáng nhìn thấy','Tia X'], ans:0 },
+      { id:75, part:'sinhtruongdv', type:'mc', text:'Khi mang thai, phụ nữ cần cẩn trọng bổ sung vitamin', opts:['Vitamin C','Vitamin D','Vitamin A','Vitamin B9'], ans:3 },
+      { id:76, part:'sinhtruongdv', type:'mc', text:'Thai nhi có thể bị dị tật nếu mẹ mắc bệnh', opts:['Tất cả','Cúm','Thuỷ đậu','Rubella'], ans:0 },
+      { id:77, part:'sinhtruongdv', type:'mc', text:'Kinh nguyệt của phụ nữ thường có chu kì', opts:['23-28 ngày','28-32 ngày','30-35 ngày','35-42 ngày'], ans:1 },
+      { id:78, part:'sinhtruongdv', type:'mc', text:'Nhân tố ít có vai trò trong sinh trưởng và phát triển của động vật', opts:['Nhiệt độ','Ánh sáng','Độ ẩm không khí','Thức ăn'], ans:2 },
+      { id:79, part:'sinhtruongdv', type:'mc', text:'Biện pháp góp phần cải thiện chất lượng dân số', opts:['Dinh dưỡng khoa học','Rèn luyện thể thao','Không lạm dụng chất kích thích','Tất cả'], ans:3 },
+      { id:80, part:'sinhtruongdv', type:'mc', text:'Nhân tố bên trong ảnh hưởng sinh trưởng động vật là', opts:['Nhiệt độ','Thức ăn','Hoocmon','Ánh sáng'], ans:2 },
+
+      // ========== SINH SẢN (TV & ĐV) ==========
+      { id:90, part:'sinhsan', type:'mc', text:'Sinh sản vô tính ở thực vật là hình thức', opts:['Có sự kết hợp giao tử','Không có sự kết hợp giao tử','Có giảm phân','Có thụ tinh'], ans:1 },
+      { id:91, part:'sinhsan', type:'mc', text:'Vì sao sinh sản hữu tính tạo ra nhiều biến dị di truyền hơn sinh sản vô tính?', opts:['Do không có giảm phân','Do có sự tổ hợp lại vật chất di truyền','Do tạo ra nhiều cá thể hơn','Do không cần thụ tinh'], ans:1 },
+      { id:92, part:'sinhsan', type:'mc', text:'Khi quan sát cây khoai tây mọc cây mới từ củ, đây là hình thức sinh sản', opts:['Hữu tính','Vô tính','Bằng bào tử','Thụ tinh'], ans:1 },
+      { id:93, part:'sinhsan', type:'mc', text:'Vì sao sinh sản hữu tính ở động vật giúp duy trì ổn định loài trong điều kiện môi trường biến đổi?', opts:['Do tạo ra cá thể giống hệt nhau','Do giảm số lượng cá thể','Do không cần giao tử','Do tăng đa dạng di truyền'], ans:3 },
+      { id:94, part:'sinhsan', type:'mc', text:'Điểm khác nhau cơ bản giữa sinh sản vô tính và hữu tính là', opts:['Có hoặc không có sự hợp nhất giao tử đực và cái','Thời gian sinh trưởng','Đặc điểm hình thái cây con','Thời gian cho hoa, kết quả'], ans:0 },
+      { id:95, part:'sinhsan', type:'mc', text:'Biến dị tổ hợp xuất hiện trong', opts:['Sinh sản vô tính','Sinh sản hữu tính','Cả vô tính và hữu tính','Sinh sản sinh dưỡng'], ans:1 },
+      { id:96, part:'sinhsan', type:'mc', text:'Phân đôi, phân mảnh, nảy chồi là kiểu sinh sản', opts:['Hữu tính','Bào tử','Sinh trinh','Sinh sản vô tính'], ans:3 },
+      { id:97, part:'sinhsan', type:'mc', text:'Cá thể mới sinh ra vẫn dính với cơ thể mẹ một thời gian là đặc trưng của', opts:['Nảy chồi','Phân đôi','Tái sinh','Trinh sinh'], ans:0 },
+      { id:98, part:'sinhsan', type:'mc', text:'Mỗi mảnh vụn cơ thể mẹ có thể tái sinh thành cơ thể hoàn chỉnh thường gặp ở', opts:['Ruột khoang','Chân khớp','Bọt biển','Thằn lằn'], ans:2 },
+      { id:99, part:'sinhsan', type:'mc', text:'Nhóm sinh vật có hình thức sinh sản phân đôi phổ biến', opts:['Giun dẹp và giun đất','Vi khuẩn và động vật đơn bào','Trùng roi và thuỷ tức','Bọt biển và trùng đế giày'], ans:1 },
+      { id:100, part:'sinhsan', type:'mc', text:'Hình thức sinh sản sinh dưỡng của thực vật giống nhất với hình thức nào ở động vật?', opts:['Phân đôi','Nảy chồi','Tái sinh','Phân mảnh'], ans:1 },
+      { id:101, part:'sinhsan', type:'mc', text:'Sự kết hợp giữa giao tử đực và giao tử cái được gọi là', opts:['Tiếp hợp','Giao phối','Thụ tinh','Phối tinh'], ans:2 },
+      { id:102, part:'sinhsan', type:'mc', text:'Nhóm động vật thụ tinh trong nhưng không đẻ con', opts:['Cá','Bò sát','Chim','Thú có túi'], ans:2 },
+      { id:103, part:'sinhsan', type:'mc', text:'Nhược điểm lớn nhất của thụ tinh ngoài là', opts:['Cần môi trường nước','Khả năng kết hợp tinh trùng và trứng thấp','Trứng không được bảo vệ','Năng lượng bị lãng phí nhiều'], ans:1 },
+      { id:104, part:'sinhsan', type:'mc', text:'Các loài động vật ở cạn không bao giờ có quá trình', opts:['Thụ tinh ngoài','Thụ tinh trong','Tự thụ tinh','Thụ tinh chéo'], ans:0 },
+      { id:105, part:'sinhsan', type:'mc', text:'Giao tử được hình thành trong cơ quan sinh sản nhờ quá trình', opts:['Trực phân','Nguyên phân','Giảm phân','Phân hóa tế bào'], ans:2 },
+      { id:106, part:'sinhsan', type:'mc', text:'Cơ sở của sinh sản vô tính ở động vật là quá trình', opts:['Nguyên phân','Giảm phân','Phân bào','Thụ tinh'], ans:0 },
+      { id:107, part:'sinhsan', type:'mc', text:'Hình thức phân đôi ở động vật gặp ở loài', opts:['Trùng biến hình','Thủy tức','Sứa','San hô'], ans:0 },
+      { id:108, part:'sinhsan', type:'mc', text:'Quá trình phát triển trứng của loài ong có điểm đặc biệt', opts:['Trứng thụ tinh phát triển thành ong thợ','Trứng không thụ tinh sẽ hỏng','Trứng không thụ tinh nở thành ong đực','Trứng không thụ tinh nở thành ong thợ'], ans:2 },
+      { id:109, part:'sinhsan', type:'mc', text:'Các hình thức sinh sản vô tính ở động vật bao gồm', opts:['Phân đôi, nảy chồi, phân mảnh, trinh sinh, nuôi mô sống, nhân bản','Phân đôi, nảy chồi, phân mảnh, trinh sinh, nuôi mô sống','Phân đôi, nảy chồi, phân mảnh, trinh sinh','Trinh sinh, nuôi mô sống, nhân bản vô tính'], ans:2 },
+      { id:110, part:'sinhsan', type:'mc', text:'Sinh sản theo kiểu đẻ trứng có ưu điểm gì so với đẻ con?', opts:['Làm tăng nhanh số cá thể','Ít hao tốn năng lượng cơ thể mẹ','Ít gây trở ngại cho hoạt động sống của mẹ','Cả bố và mẹ đều tham gia chăm sóc con'], ans:2 },
+      { id:111, part:'sinhsan', type:'mc', text:'Hợp tử được hình thành khi', opts:['Giao tử đực hòa nhập vào giao tử cái','Tế bào chất trứng và tinh trùng hòa lẫn','Tinh trùng vừa chui vào trong trứng','Nhân của giao tử đực hòa nhập vào nhân của giao tử cái'], ans:3 },
+      { id:112, part:'sinhsan', type:'mc', text:'Nhóm động vật có hình thức sinh sản vô tính', opts:['Ong, thủy tức, trùng đế giày','Cá, thú, chim','Ếch, bò sát, côn trùng','Giun đất, côn trùng'], ans:0 },
+      { id:113, part:'sinhsan', type:'mc', text:'Kiểu sinh sản vô tính mà con sinh ra có vật chất di truyền chỉ bằng một nửa của mẹ là', opts:['Phân đôi','Trinh sinh','Tái sinh','Phân mảnh'], ans:1 },
+      { id:114, part:'sinhsan', type:'mc', text:'Ở cây có hoa, giao tử đực được hình thành từ tế bào mẹ', opts:['Giảm phân cho 4 tiểu bào tử → 1 tiểu bào tử nguyên phân 1 lần...','Nguyên phân 2 lần cho 4 tiểu bào tử...','Giảm phân cho 4 tiểu bào tử → 1 tiểu bào tử nguyên phân 1 lần cho hạt phấn...','Giảm phân cho 4 tiểu bào tử → mỗi tiểu bào tử nguyên phân 1 lần...'], ans:3 },
+      { id:115, part:'sinhsan', type:'mc', text:'Đặc điểm không phải là ưu thế của sinh sản hữu tính so với vô tính ở thực vật', opts:['Có khả năng thích nghi với môi trường biến đổi','Tạo nhiều biến dị làm nguyên liệu cho chọn giống','Duy trì ổn định những tính trạng tốt về mặt di truyền','Hình thức sinh sản phổ biến'], ans:2 },
+      { id:116, part:'sinhsan', type:'mc', text:'Sinh sản hữu tính ở thực vật là sự kết hợp', opts:['Có chọn lọc của hai giao tử','Ngẫu nhiên hai giao tử đực và cái','Có chọn lọc của giao tử cái và nhiều giao tử','Của nhiều giao tử đực với một giao tử cái'], ans:1 },
+      { id:117, part:'sinhsan', type:'mc', text:'Thụ tinh ở thực vật có hoa là sự kết hợp', opts:['Hai bộ NST đơn bội của giao tử đực và cái trong túi phôi','Nhân của giao tử đực và giao tử cái trong túi phôi','Nhân của giao tử đực với nhân trứng và nhân cực','Của hai tinh tử với trứng trong túi phôi'], ans:1 },
+      { id:118, part:'sinhsan', type:'mc', text:'Ở thực vật có hoa, quá trình hình thành túi phôi trải qua', opts:['1 lần giảm phân, 1 lần nguyên phân','1 lần giảm phân, 2 lần nguyên phân','1 lần giảm phân, 3 lần nguyên phân','1 lần giảm phân, 4 lần nguyên phân'], ans:2 },
+      { id:119, part:'sinhsan', type:'mc', text:'Tự thụ phấn là sự', opts:['Thụ phấn của hạt phấn cây này với nhụy cây khác cùng loài','Thụ phấn của hạt phấn với nhụy của cùng một hoa hoặc khác hoa cùng cây','Thụ phấn của hạt phấn cây này với cây khác loài','Kết hợp tinh tử cây này với trứng cây khác'], ans:1 },
+      { id:120, part:'sinhsan', type:'mc', text:'Điều không đúng khi nói về quả', opts:['Quả do bầu nhụy sinh trưởng lên','Quả không hạt đều là quả đơn tính','Quả có vai trò bảo vệ hạt','Quả có thể là phương tiện phát tán hạt'], ans:1 },
+      { id:121, part:'sinhsan', type:'mc', text:'Thụ tinh kép ở thực vật có hoa là sự kết hợp của', opts:['Nhân 2 giao tử đực và giao tử cái','Hai nhân giao tử đực với nhân trứng và nhân cực','Hai bộ NST đơn bội của giao tử đực và cái','Hai tinh tử với trứng'], ans:1 },
+      { id:122, part:'sinhsan', type:'mc', text:'Thụ phấn chéo là sự thụ phấn giữa', opts:['Hạt phấn cây này với nhụy cây khác loài','Hạt phấn với nhụy của cùng hoa hoặc khác hoa cùng cây','Hạt phấn cây này với nhụy cây khác cùng loài','Hạt phấn và trứng của cùng hoa'], ans:2 },
+      { id:123, part:'sinhsan', type:'mc', text:'Điều không đúng khi nói về hạt', opts:['Hạt là noãn đã thụ tinh phát triển thành','Hợp tử trong hạt phát triển thành phôi','Tế bào tam bội trong hạt phát triển thành nội nhũ','Mọi hạt của thực vật có hoa đều có nội nhũ'], ans:3 }
+    ];
+
+    // Thêm các câu đúng/sai (tách thành câu hỏi riêng với 2 lựa chọn Đúng/Sai)
+    const trueFalseQuestions = [
+      { part:'sinhsan', text:'[Đúng/Sai] Các hình thức sinh sản vô tính gồm: phân đôi, nảy chồi, phân mảnh, trinh sinh', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Sinh sản ở hình thức phân đôi gặp ở hải quỳ, bọt biển, thủy tức.', ans:false },
+      { part:'sinhsan', text:'[Đúng/Sai] Phân mảnh là hình thức sinh sản mà cơ thể mới phát triển từ mảnh tách ra từ cơ thể mẹ.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Trinh sinh thường gặp ở các loài chân đốt như ong, kiến, rệp.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Sự phân hóa giới tính của hoa liên quan đến hàm lượng hormone trong cây', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Ở cây non nhiều rễ phụ thì đa phần sẽ phát triển thành cây đực.', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Cây có rễ nhiều lá, cân bằng hormone thì tỷ lệ hoa đực và hoa cái bằng nhau', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Cây có nhiều rễ và ít lá, cân bằng hormone thì tỷ lệ hoa đực bằng hoa cái', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Hormone thực vật được vận chuyển theo mạch gỗ và mạch rây.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Hormone thực vật nồng độ thấp nhưng gây tác động sinh lí lớn.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Hormone thực vật thường có tính chuyên hóa thấp hơn so với động vật', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Hormone thực vật được tạo ra ở đâu thì gây tác động sinh lí ở đấy', ans:false },
+      { part:'camung', text:'[Đúng/Sai] Cảm ứng làm cho thực vật khó tận dụng tối đa nguồn sống', ans:false },
+      { part:'camung', text:'[Đúng/Sai] Cảm ứng giúp thực vật tự vệ khi gặp kích thích bất lợi.', ans:true },
+      { part:'camung', text:'[Đúng/Sai] Cảm ứng ở thực vật thường diễn ra nhanh và khó nhận biết', ans:false },
+      { part:'camung', text:'[Đúng/Sai] Cảm ứng giúp thực vật thích ứng tốt hơn với biến đổi môi trường', ans:true },
+      { part:'camung', text:'[Đúng/Sai] Auxin phân bố không đều ở 2 phía ít hay nhiều ánh sáng.', ans:true },
+      { part:'camung', text:'[Đúng/Sai] Auxin phân bố nhiều về phía ít ánh sáng.', ans:true },
+      { part:'camung', text:'[Đúng/Sai] Lượng auxin nhiều kích thích sự sinh trưởng của tế bào.', ans:true },
+      { part:'camung', text:'[Đúng/Sai] Lượng auxin nhiều ức chế sự sinh trưởng của tế bào.', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Cây thiếu ánh sáng sẽ vươn cao hơn do auxin hoạt động mạnh hơn.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Cây đủ ánh sáng sinh trưởng kém hơn do ánh sáng làm giảm hoocmon sinh trưởng.', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Cây thiếu sáng cao yếu là do sinh trưởng không cân đối.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Nếu bổ sung ánh sáng cho cây thiếu sáng, cây sẽ phát triển cân đối hơn.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Bấm ngọn làm giảm ưu thế ngọn của cây.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Khi mất ưu thế ngọn, các chồi bên phát triển mạnh hơn.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Bấm ngọn làm cây ngừng sinh trưởng hoàn toàn.', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Kĩ thuật bấm ngọn giúp tăng số lượng cành và năng suất thu hoạch.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Cây trồng từ hạt thường có đặc điểm di truyền giống hệt cây mẹ.', ans:false },
+      { part:'sinhsan', text:'[Đúng/Sai] Chiết cành là hình thức sinh sản vô tính nên giữ được đặc tính tốt của cây mẹ.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Sinh sản hữu tính tạo ra biến dị di truyền do có sự tổ hợp gen.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Nhân giống bằng chiết cành thường cho cây thích nghi tốt hơn trong môi trường biến đổi.', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Hạt nảy mầm cần có đủ nước, oxi và nhiệt độ thích hợp.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Nếu thiếu nước, hạt vẫn nảy mầm bình thường nhờ chất dự trữ.', ans:false },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Quá trình nảy mầm là biểu hiện của sinh trưởng và phát triển ở thực vật.', ans:true },
+      { part:'sinhtruongtv', text:'[Đúng/Sai] Khi gieo hạt trong đất quá chặt, hạt khó nảy mầm do thiếu oxi.', ans:true },
+      { part:'sinhtruongdv', text:'[Đúng/Sai] Thụ tinh ngoài thường gặp ở các loài sống trong môi trường nước.', ans:true },
+      { part:'sinhtruongdv', text:'[Đúng/Sai] Thụ tinh trong luôn có tỉ lệ thụ tinh thấp hơn thụ tinh ngoài.', ans:false },
+      { part:'sinhtruongdv', text:'[Đúng/Sai] Động vật đẻ nhiều trứng thường có tỉ lệ sống của con non thấp.', ans:true },
+      { part:'sinhtruongdv', text:'[Đúng/Sai] Động vật có chăm sóc con thường có số lượng con ít hơn.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Sinh sản hữu tính giúp tăng đa dạng di truyền trong quần thể.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Động vật đẻ con (thai sinh) luôn có số lượng con nhiều hơn đẻ trứng.', ans:false },
+      { part:'sinhsan', text:'[Đúng/Sai] Chăm sóc con giúp tăng khả năng sống sót của thế hệ sau.', ans:true },
+      { part:'sinhsan', text:'[Đúng/Sai] Trong môi trường khắc nghiệt, loài sinh nhiều con nhưng ít chăm sóc có thể bù lại tỉ lệ chết cao.', ans:true }
+    ];
+
+    // Hợp nhất: chuyển true/false thành câu hỏi mc với 2 lựa chọn
+    trueFalseQuestions.forEach((tf, idx) => {
+      questions.push({
+        id: 200 + idx,
+        part: tf.part,
+        type: 'tf',
+        text: tf.text,
+        opts: ['Đúng', 'Sai'],
+        ans: tf.ans ? 0 : 1
+      });
+    });
+
+    // Thêm câu trả lời ngắn (dạng điền số)
+    const shortQuestions = [
+      { part:'sinhtruongdv', text:'Một thí nghiệm trên côn trùng: nhóm 1 bình thường, nhóm 2 thiếu juvenin, nhóm 3 thiếu ecđixơn. Có bao nhiêu nhóm không thể hoàn thành lột xác bình thường?', ans:'2' },
+      { part:'sinhtruongdv', text:'Các loài: (1) Tằm (2) Ếch (3) Cá rô (4) Muỗi (5) Gà. Có bao nhiêu loài có giai đoạn ấu trùng khác biệt rõ rệt với trưởng thành?', ans:'3' },
+      { part:'sinhtruongdv', text:'Thí nghiệm nòng nọc: nhóm 1 bình thường, nhóm 2 cắt tuyến giáp, nhóm 3 cắt tuyến giáp và tiêm tiroxin. Có bao nhiêu nhóm phát triển thành ếch?', ans:'2' },
+      { part:'sinhsan', text:'Trong tự nhiên tồn tại mấy hình thức sinh sản hữu tính ở động vật?', ans:'5' },
+      { part:'sinhsan', text:'Quá trình phát triển của động vật đẻ trứng gồm mấy giai đoạn?', ans:'2' },
+      { part:'sinhsan', text:'Các hình thức: (1) Phân đôi (2) Nảy chồi (3) Trinh sản (4) Thụ tinh ngoài (5) Thụ tinh trong. Có bao nhiêu hình thức thuộc sinh sản vô tính?', ans:'3' },
+      { part:'sinhsan', text:'Các loài: (1) Cá (2) Ếch (3) Chim (4) Thỏ (5) Cá mập. Có bao nhiêu loài có thụ tinh trong?', ans:'3' },
+      { part:'sinhsan', text:'Đặc điểm của sinh sản hữu tính: (1) Có sự kết hợp giao tử đực và cái (2) Tạo ra biến dị tổ hợp (3) Chỉ cần một cá thể (4) Có sự giảm phân tạo giao tử. Có bao nhiêu đặc điểm đúng với sinh sản hữu tính?', ans:'3' },
+      { part:'sinhsan', text:'Các hình thức: (1) Đẻ trứng ngoài môi trường nước (2) Đẻ trứng có vỏ cứng (3) Đẻ con (4) Trinh sản. Có bao nhiêu hình thức thuộc sinh sản hữu tính?', ans:'3' }
+    ];
+    shortQuestions.forEach((sq, idx) => {
+      questions.push({
+        id: 300 + idx,
+        part: sq.part,
+        type: 'short',
+        text: sq.text,
+        opts: [], // không lựa chọn
+        ans: sq.ans
+      });
+    });
+
+    // ---------- LOGIC ỨNG DỤNG ----------
+    let currentIndex = 0;
+    let filteredQuestions = [...questions];
+    let userAnswers = {};
+    let timerInterval;
+    let seconds = 0;
+
+    const partSelect = document.getElementById('partSelect');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const qIndexSpan = document.getElementById('qIndex');
+    const progressFill = document.getElementById('progressFill');
+    const scoreBadge = document.getElementById('scoreBadge');
+    const questionCard = document.getElementById('questionCard');
+    const qNum = document.getElementById('qNum');
+    const qText = document.getElementById('qText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const checkBtn = document.getElementById('checkBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const explainArea = document.getElementById('explainArea');
+    const finalScoreDiv = document.getElementById('finalScore');
+
+    function filterQuestions() {
+      const part = partSelect.value;
+      if (part === 'all') {
+        filteredQuestions = [...questions];
+      } else {
+        filteredQuestions = questions.filter(q => q.part === part);
+      }
+      currentIndex = 0;
+      userAnswers = {};
+      renderQuestion();
+      updateProgress();
+    }
+
+    function renderQuestion() {
+      if (filteredQuestions.length === 0) {
+        qNum.innerText = 'Không có câu hỏi';
+        qText.innerText = 'Vui lòng chọn phần khác.';
+        optionsContainer.innerHTML = '';
+        explainArea.innerHTML = '';
+        checkBtn.disabled = true;
+        return;
+      }
+      checkBtn.disabled = false;
+      const q = filteredQuestions[currentIndex];
+      qNum.innerText = `Câu ${currentIndex+1}/${filteredQuestions.length} • ID ${q.id}`;
+      qText.innerText = q.text;
+      explainArea.innerHTML = '';
+
+      if (q.type === 'short') {
+        optionsContainer.innerHTML = `
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input type="text" id="shortInput" placeholder="Nhập đáp án (số)" style="padding:12px; border-radius:14px; border:1px solid #ccc; width:120px; font-size:1rem;">
+            <button class="btn btn-primary" id="submitShortBtn">Xác nhận</button>
+          </div>
+        `;
+        document.getElementById('submitShortBtn').addEventListener('click', () => {
+          const val = document.getElementById('shortInput').value.trim();
+          userAnswers[q.id] = val;
+          checkAnswer();
+        });
+      } else {
+        const opts = q.opts;
+        let html = '';
+        opts.forEach((opt, idx) => {
+          const selected = userAnswers[q.id] !== undefined && userAnswers[q.id] === idx;
+          html += `
+            <div class="option-item ${selected ? 'selected' : ''}" data-optindex="${idx}">
+              <input type="radio" name="q${q.id}" ${selected ? 'checked' : ''} disabled>
+              <span>${String.fromCharCode(65+idx)}. ${opt}</span>
+            </div>
+          `;
+        });
+        optionsContainer.innerHTML = html;
+        document.querySelectorAll('.option-item').forEach(item => {
+          item.addEventListener('click', function() {
+            const idx = parseInt(this.dataset.optindex);
+            userAnswers[q.id] = idx;
+            renderQuestion();
+          });
+        });
+      }
+    }
+
+    function checkAnswer() {
+      const q = filteredQuestions[currentIndex];
+      if (q.type === 'short') {
+        const userAns = userAnswers[q.id] || '';
+        const isCorrect = userAns === q.ans;
+        explainArea.innerHTML = `<div class="explain-box">${isCorrect ? '✅ Chính xác!' : '❌ Chưa đúng. Đáp án: ' + q.ans}</div>`;
+        updateScore();
+        return;
+      }
+      if (userAnswers[q.id] === undefined) {
+        explainArea.innerHTML = '<div class="explain-box">⚠️ Vui lòng chọn một đáp án.</div>';
+        return;
+      }
+      const selected = userAnswers[q.id];
+      const correct = q.ans;
+      const isCorrect = (selected === correct);
+      const optItems = document.querySelectorAll('.option-item');
+      optItems.forEach((item, idx) => {
+        item.classList.remove('correct', 'wrong');
+        if (idx === correct) item.classList.add('correct');
+        else if (idx === selected && !isCorrect) item.classList.add('wrong');
+      });
+      explainArea.innerHTML = `<div class="explain-box">${isCorrect ? '✅ Chính xác!' : '❌ Sai. Đáp án đúng là ' + String.fromCharCode(65+correct)}</div>`;
+      updateScore();
+    }
+
+    function updateScore() {
+      let correctCount = 0;
+      filteredQuestions.forEach(q => {
+        if (q.type === 'short') {
+          if (userAnswers[q.id] === q.ans) correctCount++;
+        } else {
+          if (userAnswers[q.id] === q.ans) correctCount++;
+        }
+      });
+      scoreBadge.innerText = `${correctCount}/${filteredQuestions.length} đúng`;
+    }
+
+    function updateProgress() {
+      const total = filteredQuestions.length;
+      const done = Object.keys(userAnswers).length;
+      qIndexSpan.innerText = `Câu ${currentIndex+1}/${total}`;
+      progressFill.style.width = total ? `${(done/total)*100}%` : '0%';
+    }
+
+    function goToQuestion(index) {
+      if (index < 0 || index >= filteredQuestions.length) return;
+      currentIndex = index;
+      renderQuestion();
+      updateProgress();
+    }
+
+    // Timer
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      seconds = 0;
+      timerDisplay.innerText = '⏳ 00:00';
+      timerInterval = setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds/60).toString().padStart(2,'0');
+        const secs = (seconds%60).toString().padStart(2,'0');
+        timerDisplay.innerText = `⏳ ${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // Event listeners
+    partSelect.addEventListener('change', filterQuestions);
+    checkBtn.addEventListener('click', checkAnswer);
+    prevBtn.addEventListener('click', () => goToQuestion(currentIndex-1));
+    nextBtn.addEventListener('click', () => goToQuestion(currentIndex+1));
+
+    // Khởi động
+    filterQuestions();
+    startTimer();
+  })();
+</script>
+</body>
+</html>
